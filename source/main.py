@@ -36,7 +36,7 @@ def main():
     print('Grammar in Chomsky normal form:')
     print(cnf_grammar)
 
-    #Unit tests 
+    #Unit tests
     test_suite = unittest.TestSuite()
     test_suite.addTest(unittest.makeSuite(UnitTester))
     runner = unittest.TextTestRunner()
