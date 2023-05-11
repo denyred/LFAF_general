@@ -19,20 +19,23 @@ P={1. S⇒dB
 10. C→Aa}
 ## Theory
 
-Chomsky Normal Form (CNF) is a simplified form of context-free grammars that is useful in both the study and the development of algorithms for parsing and other language-processing tasks. A context-free grammar is said to be in Chomsky Normal Form if all its production rules are in one of the following two forms:
+Chomsky Normal Form (CNF) is a simplified representation of context-free grammars that has proven to be valuable in studying and developing algorithms for parsing and other language-processing tasks. CNF imposes specific restrictions on the structure of production rules within a context-free grammar, resulting in a more straightforward and manageable form.
 
-1. A -> BC, where A, B, and C are non-terminal symbols.
-2. A -> a, where A is a non-terminal symbol, and a is a terminal symbol. 
+To adhere to CNF, every production rule in the grammar must follow one of two formats. The first format is A -> BC, where A, B, and C are non-terminal symbols. The second format is A -> a, where A is a non-terminal symbol, and "a" represents a terminal symbol.
 
-The main advantage of CNF is its simplicity, which makes it easier to develop algorithms that work with context-free grammars. Any context-free grammar can be converted into an equivalent grammar in Chomsky Normal Form. The conversion process involves the following steps:
+The primary advantage of CNF is its simplicity, which makes it easier to design algorithms that operate on context-free grammars. Additionally, any context-free grammar can be transformed into an equivalent grammar in Chomsky Normal Form. This conversion process involves several steps.
 
-1. Eliminate ε-productions: Replace any production rule of the form A -> ε with alternative productions that generate the same language without the ε-production.
-2. Eliminate renaming (unit productions): Remove production rules of the form A -> B, where A and B are non-terminal symbols, and substitute the production rules for B in place of A.
-3. Eliminate inaccessible symbols: Remove any non-terminal symbols that cannot be reached from the start symbol in the grammar.
-4. Eliminate non-productive symbols: Remove any non-terminal symbols that cannot derive any terminal strings.
-5. Convert remaining rules to CNF: Break down production rules with more than two symbols on the right-hand side into multiple rules that conform to the CNF format.
+First, we eliminate ε-productions, which are production rules that can generate the empty string ε. We replace such rules with alternative productions that generate the same language without including the ε-production.
 
-By following these steps, we can transform any context-free grammar into an equivalent grammar in Chomsky Normal Form without altering the language it generates.
+Next, we remove renaming or unit productions. These are production rules of the form A -> B, where A and B are non-terminal symbols. We replace these unit productions by substituting the production rules for B in place of A.
+
+Then, we eliminate symbols that are inaccessible, meaning non-terminal symbols that cannot be reached from the start symbol in the grammar.
+
+Similarly, we remove non-productive symbols, which are non-terminal symbols that cannot derive any terminal strings.
+
+Finally, we convert the remaining production rules to adhere to the CNF format. This involves breaking down rules with more than two symbols on the right-hand side into multiple rules that conform to the A -> BC or A -> a form.
+
+By following these steps, we can transform any context-free grammar into an equivalent grammar in Chomsky Normal Form, while preserving the language it generates. This normalization process simplifies the handling of context-free grammars and facilitates the development of algorithms for parsing and other language-processing tasks.
 
 ## Objectives
 
@@ -46,7 +49,14 @@ By following these steps, we can transform any context-free grammar into an equi
 
 ### Eliminate Epsilon Productions
 
-The `eliminate_epsilon` method is responsible for removing ε-productions (rules of the form A -> ε) from the grammar. It identifies all non-terminal symbols that generate ε directly or indirectly and substitutes them in all other production rules, effectively removing the need for ε-productions.
+The eliminate_epsilon method plays a crucial role in eliminating ε-productions from the grammar. An ε-production is a production rule of the form A -> ε, where A is a non-terminal symbol, and it indicates that A can generate an empty string.
+
+To remove ε-productions, the eliminate_epsilon method identifies all non-terminal symbols that can generate ε directly or indirectly. It then systematically substitutes these symbols in all other production rules within the grammar. By doing so, it effectively eliminates the need for ε-productions and ensures that the grammar no longer produces empty strings.
+
+The process of eliminating ε-productions is significant because it helps simplify the grammar and enables more efficient parsing and language-processing algorithms. Removing ε-productions ensures that the grammar generates well-defined structures without the ambiguity introduced by empty strings. This step is a fundamental part of transforming a context-free grammar into Chomsky Normal Form (CNF), as CNF does not allow ε-productions.
+
+By applying the eliminate_epsilon method, we can modify the grammar to generate the same language but without the presence of ε-productions. This leads to a more manageable and predictable grammar, facilitating subsequent parsing and language-processing tasks.
+
 ```python
         def eliminate_epsilon(self):
         vn, vi, p, s = self.grammar
@@ -98,7 +108,13 @@ The `eliminate_renaming` method removes unit productions (rules of the form A ->
 ```
 ### Eliminate Inaccessible Symbols
 
-The `eliminateInaccessibleSymbols` part of the `eliminate_renaming` removes non-terminal symbols that are not reachable from the start symbol of the grammar. It starts with the start symbol and iteratively finds all non-terminal symbols reachable from it. Then, it removes any production rules containing non-reachable symbols.
+The 'eliminateInaccessibleSymbols' component within the 'eliminate_renaming' process focuses on removing non-terminal symbols that cannot be reached from the start symbol of the grammar. It begins by considering the start symbol as the initial point and iteratively identifies all non-terminal symbols that can be reached from it, traversing the grammar's production rules.
+
+By determining the set of reachable non-terminal symbols, the eliminateInaccessibleSymbols phase ensures that only symbols accessible from the start symbol are retained. Any production rules containing non-reachable symbols are subsequently removed from the grammar.
+
+This step is crucial as it helps streamline the grammar by discarding symbols that have no influence on the language generated by the grammar. By eliminating inaccessible symbols, the grammar becomes more focused and concise, making subsequent language-processing tasks more efficient.
+
+The process of eliminating inaccessible symbols enables a more accurate analysis of the grammar's structure and behavior, as only relevant symbols are considered. It simplifies the grammar and aids in the development of parsing algorithms and other language-processing techniques. By removing unreachable non-terminal symbols, we can effectively reduce the complexity of the grammar and improve the overall effectiveness of subsequent language-processing tasks.
 
 ```python
   # Step 4: Eliminate inaccessible symbols
@@ -126,7 +142,13 @@ The `eliminateInaccessibleSymbols` part of the `eliminate_renaming` removes non-
 
 ### Eliminate Non-Productive Symbols
 
-The `eliminate_nonproductive` method removes non-terminal symbols that cannot derive any terminal strings. It first identifies all non-productive symbols and then removes any production rules containing them. This step ensures that every non-terminal symbol in the grammar can derive at least one terminal string.
+The eliminate_nonproductive method is responsible for eliminating non-terminal symbols that cannot generate any terminal strings from the grammar. It begins by identifying all non-productive symbols, which are symbols that cannot produce any valid sequences of terminals.
+
+Once the non-productive symbols have been identified, the eliminate_nonproductive process proceeds to remove any production rules that involve these symbols. By doing so, it guarantees that every remaining non-terminal symbol in the grammar can derive at least one terminal string, ensuring that the grammar remains productive.
+
+This step is crucial because non-productive symbols introduce ambiguity and inefficiency in the grammar. Removing them helps streamline the grammar by focusing on symbols that have the potential to generate meaningful sequences of terminals. By eliminating non-productive symbols, the grammar becomes more concise and facilitates more effective parsing and language-processing algorithms.
+
+The eliminate_nonproductive method contributes to the overall transformation of the grammar into a more refined and productive form. It ensures that all non-terminal symbols have the ability to generate valid terminal strings, thereby enhancing the clarity and efficiency of subsequent language-processing tasks.
 
 ```python
        def eliminate_nonproductive(self):
@@ -157,7 +179,15 @@ The `eliminate_nonproductive` method removes non-terminal symbols that cannot de
 ```
 
 ### Convert to Chomsky Normal Form
-The `chomsky_normal_form` method converts the remaining production rules to the CNF format. It does so by breaking down rules with more than two symbols on the right-hand side into multiple rules that conform to CNF. Additionally, it introduces new non-terminal symbols for terminal symbols within rules containing more than one symbol on the right-hand side.
+The chomsky_normal_form method is essential for converting the remaining production rules of the grammar into the Chomsky Normal Form (CNF). Its primary task is to restructure rules that contain more than two symbols on the right-hand side, breaking them down into multiple rules that adhere to the CNF format.
+
+During the conversion process, the chomsky_normal_form method introduces new non-terminal symbols to represent terminal symbols within rules that have multiple symbols on the right-hand side. This step ensures that all production rules conform to the desired CNF structure.
+
+By breaking down complex rules into smaller units and introducing new symbols when needed, the chomsky_normal_form method simplifies the grammar, making it more manageable and suitable for subsequent parsing and language-processing algorithms. The CNF format imposes specific constraints on the structure of production rules, and the transformation aligns the rules with these requirements.
+
+Converting the grammar to CNF is significant because it standardizes the grammar representation, enabling the application of efficient parsing algorithms and facilitating other language-processing techniques. Adhering to the CNF format allows for more structured analysis of the grammar, contributing to the development of advanced language tools and compilers.
+
+In summary, the chomsky_normal_form method is responsible for converting the remaining grammar rules into CNF, restructuring complex rules and introducing new symbols as necessary. This transformation simplifies the grammar and opens doors to more effective language processing and the creation of sophisticated language analysis tools.
 
 ```python
         def chomsky_normal_form(self):
@@ -216,9 +246,26 @@ The `chomsky_normal_form` method converts the remaining production rules to the 
         return vn, vi, p, s
 ```
 
-These methods, when executed in sequence, transform the input grammar into an equivalent grammar in Chomsky Normal Form.
+By executing these methods in a sequential manner, the input grammar undergoes a transformation process that ultimately results in an equivalent grammar represented in Chomsky Normal Form (CNF). Each method performs a specific task that contributes to the overall conversion process.
+
+The eliminate_epsilon method eliminates ε-productions by identifying non-terminal symbols that generate empty strings and substituting them in other production rules. This ensures that the grammar no longer contains rules of the form A -> ε.
+
+The eliminate_renaming method removes non-terminal symbols that are not reachable from the start symbol. It iteratively identifies reachable symbols and eliminates any production rules involving non-reachable symbols, refining the grammar's structure.
+
+The eliminate_nonproductive method targets non-terminal symbols that cannot generate any terminal strings. It removes production rules associated with these symbols, guaranteeing that every non-terminal symbol in the grammar can derive at least one terminal string.
+
+Finally, the chomsky_normal_form method converts the remaining production rules to conform to the CNF format. It achieves this by breaking down rules with more than two symbols on the right-hand side into multiple rules, and introducing new non-terminal symbols for terminal symbols within rules containing multiple symbols.
+
+Executing these methods in sequence ensures that the input grammar is progressively transformed into an equivalent grammar represented in Chomsky Normal Form. This conversion process is essential for standardizing the grammar, enabling efficient parsing algorithms, and facilitating advanced language analysis and processing techniques.
+
 ### Performing Unit Tests
-This is a unit test class for the CNFConverter class, tests the conversion of context-free grammars to Chomsky normal form. The tests include input grammars and their expected outputs as tuples, and each test asserts that the output of the convert_to_cnf method of the CNFConverter class matches the expected output.
+This class is a unit test for the CNFConverter class, specifically designed to test the conversion of context-free grammars to Chomsky Normal Form (CNF). The unit test contains a set of test cases, where each case consists of an input grammar and its corresponding expected output. The test class verifies the correctness of the conversion process by asserting that the output of the convert_to_cnf method in the CNFConverter class matches the expected output for each test case.
+
+The purpose of these unit tests is to ensure that the CNFConverter class performs the grammar conversion accurately and consistently. By comparing the actual output with the expected output, any discrepancies or errors in the conversion process can be identified and corrected.
+
+The test cases cover a range of input grammars, allowing for comprehensive testing of various grammar structures and rules. This helps validate the robustness and effectiveness of the CNF conversion algorithm implemented in the CNFConverter class.
+
+Overall, this unit test class serves as a reliable means of verifying the correctness of the CNF conversion functionality provided by the CNFConverter class, ensuring that context-free grammars are accurately transformed into Chomsky Normal Form.
 ```python
       class UnitTester(unittest.TestCase):
     def test_grammar_1(self):
